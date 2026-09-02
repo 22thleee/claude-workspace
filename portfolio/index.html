@@ -1,0 +1,575 @@
+<title>이태훈 포트폴리오</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Libre+Franklin:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<style>
+  :root {
+    /* light palette — warm off-white with a faint green bias, safety-green accent (녹십자) */
+    --ground:      #f6f7f3;
+    --surface:     #ffffff;
+    --ink:         #1c241e;
+    --ink-soft:    #57614f;
+    --ink-faint:   #8b9482;
+    --accent:      #1e7a44;
+    --accent-2:    #165c33;
+    --line:        #e3e6dd;
+    --tag-bg:      #edf1e8;
+
+    --font-display: "Fraunces", "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", serif;
+    --font-body:    "Libre Franklin", "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", system-ui, sans-serif;
+    --font-kr:      "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", "Libre Franklin", sans-serif;
+    --font-mono:    "IBM Plex Mono", ui-monospace, "Consolas", monospace;
+
+    --wrap: 62rem;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:    #10140f;
+      --surface:   #171c15;
+      --ink:       #edf1ea;
+      --ink-soft:  #9ba695;
+      --ink-faint: #6d7766;
+      --accent:    #46c47c;
+      --accent-2:  #63d494;
+      --line:      #293025;
+      --tag-bg:    #1d221a;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground:    #10140f;
+    --surface:   #171c15;
+    --ink:       #edf1ea;
+    --ink-soft:  #9ba695;
+    --ink-faint: #6d7766;
+    --accent:    #46c47c;
+    --accent-2:  #63d494;
+    --line:      #293025;
+    --tag-bg:    #1d221a;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    width: 100%;
+    max-width: var(--wrap);
+    margin-inline: auto;
+    padding-inline: clamp(1.25rem, 5vw, 3rem);
+  }
+
+  /* ---- top bar ------------------------------------------------ */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: color-mix(in srgb, var(--ground) 88%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .topbar .wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 0.85rem;
+  }
+  .brand {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .nav a {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    text-decoration: none;
+  }
+  .nav a:hover { color: var(--accent); }
+
+  .theme-btn {
+    appearance: none;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ink-soft);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.4rem 0.6rem;
+    border-radius: 2px;
+    cursor: pointer;
+  }
+  .theme-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+  @media (max-width: 620px) {
+    .nav a { display: none; }
+  }
+
+  /* ---- shared section furniture ----------------------------- */
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 1.1rem;
+  }
+  section { padding-block: clamp(3.25rem, 8vw, 5.5rem); }
+  section + section { border-top: 1px solid var(--line); }
+
+  h2 {
+    font-family: var(--font-kr);
+    font-weight: 600;
+    font-size: clamp(1.4rem, 3.4vw, 1.9rem);
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    margin: 0 0 2rem;
+    text-wrap: balance;
+  }
+
+  /* ---- hero ------------------------------------------------- */
+  .hero { padding-block: clamp(3.5rem, 10vw, 6.5rem); }
+  .hero-role {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 0 0 1.4rem;
+  }
+  .hero-name {
+    font-family: var(--font-kr);
+    font-weight: 600;
+    font-size: clamp(3rem, 11vw, 5.25rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+  .hero-name .latin {
+    display: block;
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: italic;
+    font-size: clamp(1.15rem, 3.4vw, 1.7rem);
+    letter-spacing: 0.01em;
+    color: var(--ink-soft);
+    margin-top: 0.9rem;
+  }
+  .hero-deck {
+    margin: 1.8rem 0 0;
+    max-width: 36ch;
+    font-size: clamp(1.05rem, 2.6vw, 1.3rem);
+    line-height: 1.5;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+  .hero-rule {
+    width: 3.5rem;
+    height: 2px;
+    background: var(--accent);
+    margin: 2.4rem 0 0;
+  }
+
+  .load-in { animation: rise 0.7s cubic-bezier(.2,.7,.2,1) both; }
+  .load-in:nth-child(2) { animation-delay: 0.06s; }
+  .load-in:nth-child(3) { animation-delay: 0.12s; }
+  .load-in:nth-child(4) { animation-delay: 0.18s; }
+  @keyframes rise { from { opacity: 0; transform: translateY(0.6rem); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .load-in { animation: none; }
+  }
+
+  /* ---- results strip -------------------------------------- */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.75rem 1.25rem;
+    border-block: 1px solid var(--line);
+    padding-block: 2rem;
+  }
+  .stat .fig {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: clamp(1.7rem, 4.4vw, 2.4rem);
+    line-height: 1.05;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .stat .cap {
+    margin-top: 0.6rem;
+    font-size: 0.82rem;
+    line-height: 1.45;
+    color: var(--ink-soft);
+  }
+  @media (max-width: 720px) {
+    .stats { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* ---- profile ------------------------------------------- */
+  .prose p {
+    max-width: 60ch;
+    margin: 0 0 1.1rem;
+    color: var(--ink);
+  }
+  .prose p:last-child { margin-bottom: 0; }
+
+  .toolbox {
+    margin-top: 2.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .toolbox span {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.02em;
+    color: var(--ink-soft);
+    background: var(--tag-bg);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    padding: 0.35rem 0.6rem;
+  }
+
+  /* ---- experience -------------------------------------- */
+  .job {
+    display: grid;
+    grid-template-columns: 13rem 1fr;
+    gap: 1.5rem 2.5rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--line);
+  }
+  .job + .job { margin-top: 2.5rem; }
+  .job .meta {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    line-height: 1.7;
+    color: var(--ink-soft);
+  }
+  .job .meta .when { color: var(--ink); }
+  .job .meta .where { display: block; margin-top: 0.35rem; color: var(--ink); }
+  .job .meta .kind { display: block; color: var(--ink-faint); }
+  .job .meta .flag {
+    display: inline-block;
+    margin-top: 0.6rem;
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 2px;
+    padding: 0.1rem 0.4rem;
+  }
+  .job h3 {
+    margin: 0 0 0.9rem;
+    font-family: var(--font-kr);
+    font-weight: 600;
+    font-size: 1.15rem;
+    color: var(--ink);
+  }
+  .job ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+  .job li {
+    position: relative;
+    padding-left: 1.1rem;
+    max-width: 58ch;
+    color: var(--ink-soft);
+  }
+  .job li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.62em;
+    width: 5px;
+    height: 5px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+  @media (max-width: 720px) {
+    .job { grid-template-columns: 1fr; gap: 1rem; }
+    .job .meta .where { display: inline; margin-left: 0.5rem; }
+  }
+
+  /* ---- contact ---------------------------------------- */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+  }
+  .contact-grid div {
+    padding: 1.1rem 0;
+    border-top: 1px solid var(--line);
+  }
+  .contact-grid dt {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 0.35rem;
+  }
+  .contact-grid dd {
+    margin: 0;
+    font-size: 0.98rem;
+    color: var(--ink);
+    word-break: break-word;
+  }
+  .contact-grid a {
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid var(--accent);
+    padding-bottom: 1px;
+  }
+  .contact-grid a:hover { color: var(--accent); }
+  @media (max-width: 560px) {
+    .contact-grid { grid-template-columns: 1fr; }
+  }
+
+  .note {
+    margin-top: 1.5rem;
+    font-size: 0.8rem;
+    color: var(--ink-faint);
+    max-width: 62ch;
+  }
+  .stats + .note { margin-top: 1.25rem; }
+
+  footer {
+    border-top: 1px solid var(--line);
+    padding-block: 2.25rem;
+  }
+  footer .wrap {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    color: var(--ink-faint);
+  }
+
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+</style>
+
+<header class="topbar">
+  <div class="wrap">
+    <span class="brand">Lee Taehoon</span>
+    <nav class="nav">
+      <a href="#profile">소개</a>
+      <a href="#work">경력</a>
+      <a href="#contact">연락처</a>
+      <button type="button" class="theme-btn" id="themeBtn" aria-label="색상 테마 전환">Theme</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <p class="hero-role load-in">Safety Manager · HSE</p>
+      <h1 class="hero-name load-in">
+        이태훈
+        <span class="latin">Lee Taehoon</span>
+      </h1>
+      <p class="hero-deck load-in">현장의 위험을 데이터로 통제하는 건설·제조 산업 안전관리자.</p>
+      <div class="hero-rule load-in"></div>
+    </div>
+  </section>
+
+  <section id="results">
+    <div class="wrap">
+      <p class="eyebrow">Results</p>
+      <h2>숫자로 남은 성과</h2>
+      <div class="stats">
+        <div class="stat">
+          <div class="fig">1,200일</div>
+          <div class="cap">담당 현장<br>연속 무재해 기록</div>
+        </div>
+        <div class="stat">
+          <div class="fig">&minus;45%</div>
+          <div class="cap">재해율(도수율) 감소<br>2년간</div>
+        </div>
+        <div class="stat">
+          <div class="fig">1,800건</div>
+          <div class="cap">위험 요인 발굴·개선<br>연간, 아차사고 신고 기반</div>
+        </div>
+        <div class="stat">
+          <div class="fig">98%</div>
+          <div class="cap">정기 안전보건교육<br>이수율</div>
+        </div>
+      </div>
+      <p class="note">※ 위 수치는 포트폴리오 형식을 보여주기 위한 <strong>예시 값</strong>입니다. 실제 담당 현장의 성과로 교체해 주세요.</p>
+    </div>
+  </section>
+
+  <section id="profile">
+    <div class="wrap">
+      <p class="eyebrow">Profile</p>
+      <h2>소개</h2>
+      <div class="prose">
+        <p>건설·제조 현장에서 산업안전보건 업무를 담당해 온 안전관리자입니다. 위험성평가부터 작업허가제(PTW), 협력업체 안전관리, 중대재해처벌법 대응까지 현장의 위험을 사전에 통제하는 일을 합니다.</p>
+        <p>KOSHA-MS·ISO 45001 안전보건경영시스템을 운영하고, 아차사고 신고와 TBM(작업 전 안전점검)을 기록으로 관리하며, 재해 통계를 분석해 반복되는 위험 요인을 근본적으로 제거하는 데 집중합니다.</p>
+      </div>
+      <div class="toolbox" aria-label="주요 업무 및 역량">
+        <span>위험성평가</span>
+        <span>작업허가제 (PTW)</span>
+        <span>KOSHA-MS</span>
+        <span>ISO 45001</span>
+        <span>중대재해처벌법 대응</span>
+        <span>PSM 공정안전관리</span>
+        <span>밀폐공간 작업관리</span>
+        <span>고소작업 관리</span>
+        <span>협력업체 안전관리</span>
+        <span>안전보건교육</span>
+        <span>재해조사·통계</span>
+        <span>산업안전기사</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="work">
+    <div class="wrap">
+      <p class="eyebrow">Experience</p>
+      <h2>경력 사항</h2>
+
+      <article class="job">
+        <div class="meta">
+          <span class="when">2020.04 &mdash; 현재</span>
+          <span class="where">(주)대현건설</span>
+          <span class="kind">건설 현장 · 아파트/플랜트</span>
+          <span class="flag">예시 항목</span>
+        </div>
+        <div>
+          <h3>안전관리자 (선임)</h3>
+          <ul>
+            <li>연면적 12만㎡ 규모 현장의 선임 안전관리자로서 위험성평가·작업허가·안전순찰을 총괄, 2년간 재해율(도수율) 45% 감소.</li>
+            <li>중대재해처벌법 대응 체계 수립 &mdash; 경영책임자 보고 라인, 협력업체 안전 평가 기준, 월간 안전보건 협의체 구축.</li>
+            <li>아차사고 신고 제도를 도입해 연 1,800건의 위험 요인을 발굴·개선하고 연속 무재해 1,200일 달성.</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="job">
+        <div class="meta">
+          <span class="when">2016.03 &mdash; 2020.03</span>
+          <span class="where">(주)한성중공업</span>
+          <span class="kind">제조 · 기계/금속 가공</span>
+          <span class="flag">예시 항목</span>
+        </div>
+        <div>
+          <h3>안전보건팀 · 안전관리 담당</h3>
+          <ul>
+            <li>지게차·크레인 등 중량물 취급 공정의 위험성평가를 재정비하고 작업표준 28종을 개정.</li>
+            <li>ISO 45001 인증 취득 프로젝트 실무를 담당 (문서화, 내부심사, 부적합 시정조치 관리).</li>
+            <li>신규 입사자·협력업체 대상 안전보건교육 프로그램을 운영해 정기교육 이수율 98% 유지.</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="job">
+        <div class="meta">
+          <span class="when">2014.07 &mdash; 2016.02</span>
+          <span class="where">(주)세인이엔지</span>
+          <span class="kind">설비 시공</span>
+          <span class="flag">예시 항목</span>
+        </div>
+        <div>
+          <h3>안전관리 보조</h3>
+          <ul>
+            <li>고소작업·밀폐공간 작업의 작업허가서(PTW) 발급과 현장 입회 점검을 수행.</li>
+            <li>개인보호구(PPE) 지급·점검 대장을 관리하고 월간 안전점검 리포트를 작성.</li>
+            <li>협력업체 안전 서류(4대보험, 안전교육일지, 유해위험기계 검사증)를 취합·검토.</li>
+          </ul>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="wrap">
+      <p class="eyebrow">Contact</p>
+      <h2>연락처</h2>
+      <dl class="contact-grid">
+        <div>
+          <dt>Email</dt>
+          <dd><a href="mailto:taehoon.lee@example.com">taehoon.lee@example.com</a></dd>
+        </div>
+        <div>
+          <dt>Phone</dt>
+          <dd>010-0000-0000</dd>
+        </div>
+        <div>
+          <dt>Location</dt>
+          <dd>서울</dd>
+        </div>
+        <div>
+          <dt>자격</dt>
+          <dd>산업안전기사</dd>
+        </div>
+        <div>
+          <dt>LinkedIn</dt>
+          <dd><a href="https://linkedin.com/in/taehoon-lee" target="_blank" rel="noopener">linkedin.com/in/taehoon-lee</a></dd>
+        </div>
+      </dl>
+      <p class="note">※ 연락처와 경력 3건은 실제 정보가 아닌 <strong>예시</strong>입니다. 이름·직업만 &lsquo;이태훈 / 안전관리자&rsquo;로 반영했고, 나머지는 실제 이력으로 교체해 주세요.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>이태훈 · 안전관리자</span>
+    <span>Last updated 2026.09</span>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var btn = document.getElementById('themeBtn');
+    var saved = null;
+    try { saved = localStorage.getItem('theme'); } catch (e) {}
+    if (saved === 'light' || saved === 'dark') root.setAttribute('data-theme', saved);
+
+    btn.addEventListener('click', function () {
+      var current = root.getAttribute('data-theme');
+      if (!current) {
+        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        current = prefersDark ? 'dark' : 'light';
+      }
+      var next = current === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch (e) {}
+    });
+  })();
+</script>

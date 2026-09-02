@@ -1,0 +1,34 @@
+# ── 비밀정보: 절대 커밋 금지 ──────────────────────
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+id_rsa
+id_rsa.*
+id_ed25519
+id_ed25519.*
+*credentials*
+*secret*
+.ssh/
+
+# ── OS / 편집기 ─────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*~
+.vscode/
+.idea/
+
+# ── 백업 / 임시 파일 ────────────────────────────────
+*.bak
+*.tmp
+*.log
+
+# ── 자동 생성 결과물 ────────────────────────────────
+weather.txt
+
+# ── 개인/업무 자료 (git 추적 제외, 로컬에는 유지) ──
+docs/resume.pdf
+docs/sales.csv
