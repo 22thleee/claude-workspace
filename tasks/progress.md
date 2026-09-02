@@ -54,3 +54,12 @@
 - **결과:** 확인됨. https://github.com/22thleee/claude-workspace (PRIVATE). 커밋 1개(11개 파일).
   원격 트리 재검증 — resume.pdf / sales.csv / weather.txt / *.bak / .env 계열 없음.
   제외한 파일들은 로컬에는 그대로 있음(git 추적만 제외).
+
+### 포트폴리오 기본 테마를 다크모드로
+- **무엇을:** 브랜치 `portfolio-dark-mode` 에서 `portfolio/index.html` 의 `:root` 기본 팔레트를
+  라이트 → 다크로 교체. 라이트는 이제 `@media (prefers-color-scheme: light)` +
+  `:root[data-theme="light"]` 일 때만 적용. 테마 토글 JS 폴백도 새 기본값(다크)에 맞게 수정
+  (라이트 OS에서 첫 클릭 무반응 방지). 색값은 파일에 원래 있던 다크 팔레트 재사용.
+- **왜:** 사용자 요청 — 포트폴리오 기본 배경을 어둡게.
+- **결과:** 사용자가 브라우저로 확인 후 승인. `main` 에 `--no-ff` 머지(e3899ab) 후
+  GitHub 푸시 완료(db40111..e3899ab). 로컬 브랜치는 남겨둠.
