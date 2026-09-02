@@ -44,3 +44,13 @@
   마케팅 내용 전체를 산업안전보건 도메인으로 재작성(위험성평가·PTW·중대재해처벌법·KOSHA-MS 등),
   성과 지표 4개·경력 3건 모두 예시로 채우고 "예시 항목" 태그 + 안내문 명시. 액센트 색을 안전녹색(녹십자)으로 조정.
   실제 이력·연락처·수치는 사용자가 교체 필요.
+
+### claude-workspace GitHub 업로드
+- **무엇을:** 이 폴더를 GitHub private 레포(`22thleee/claude-workspace`)로 올림.
+  `.gitignore` 에 `weather.txt`·`docs/resume.pdf`·`docs/sales.csv` 추가, `README.md` 를 전체 폴더 구조
+  기준으로 새로 작성(기존본 `README.md.bak` 백업). `git init`(main) → 커밋 "Initial setup" → `gh repo create --private --push`.
+  git 사용자 정보는 이 레포에만 로컬 설정(22thleee / 22thleee@gmail.com).
+- **왜:** 사용자 요청. 작업 공간을 private 저장소로 백업/버전관리.
+- **결과:** 확인됨. https://github.com/22thleee/claude-workspace (PRIVATE). 커밋 1개(11개 파일).
+  원격 트리 재검증 — resume.pdf / sales.csv / weather.txt / *.bak / .env 계열 없음.
+  제외한 파일들은 로컬에는 그대로 있음(git 추적만 제외).
