@@ -1,13 +1,14 @@
 # 포트폴리오 웹 — 배포 안내
 
-이태훈 / 안전관리자 포트폴리오. **정적 사이트**(HTML 1파일)라 빌드 과정이 없습니다.
+이태훈 / 안전관리자 포트폴리오. 거의 **정적 사이트**(HTML 1파일)이고,
+방명록 연결 정보(`config.js`)만 배포 시 환경변수에서 자동 생성됩니다.
 
 ```
 portfolio/
 ├── index.html         페이지 본문 (디자인·내용·방명록 스크립트 전부 이 파일 안에)
 ├── favicon.svg        브라우저 탭 아이콘
 ├── robots.txt         검색엔진 수집 허용
-├── vercel.json        Vercel 설정 (클린 URL + 기본 보안 헤더)
+├── vercel.json        Vercel 설정 (빌드 명령 + 클린 URL + 보안 헤더)
 ├── config.example.js  방명록 설정 템플릿 (git 포함)
 ├── config.js          방명록 실제 설정 — 자동 생성, git 제외
 ├── supabase/
@@ -63,34 +64,33 @@ python -m http.server 8000           # 또는  npx serve -l 8000
 브라우저에서 `http://localhost:8000` → 맨 아래 **방명록** 섹션에서 글 작성 → 목록에 바로 표시되면 정상.
 (`file://` 로 직접 열면 `fetch` 가 막혀서 안 됩니다. 반드시 로컬 서버로 여세요.)
 
-### 배포(Vercel) 시 config.js 넣는 법
-
-`config.js` 는 git 에 안 올라가므로 배포본에는 없습니다. 둘 중 하나:
-
-- **간단:** `config.js` 를 커밋한다. (anon key 는 공개 키라 저장소가 private 이면 부담 없음)
-- **깔끔:** Vercel 프로젝트 **Settings → Environment Variables** 에 `SUPABASE_URL`,
-  `SUPABASE_ANON_KEY` 등록 → **Build Command** 를 `node ../scripts/gen-config.mjs` 로 설정
-  (Root Directory 가 `portfolio` 이므로 스크립트 경로 앞에 `../`).
-
 ---
 
-## 🚀 Vercel 웹에서 배포하기 (버튼 클릭만)
+## 🚀 Vercel 웹에서 배포하기
 
-1. **[vercel.com](https://vercel.com) 로그인** — GitHub 계정으로 로그인하면 편합니다.
-2. 대시보드에서 **Add New… → Project** 클릭.
-3. **`22thleee/claude-workspace`** 저장소를 **Import**.
-4. 설정 화면에서 아래 **한 가지만** 바꿉니다:
+`config.js` 는 git 에 안 올라갑니다. 대신 **Vercel 환경변수 → 빌드 시 자동 생성**됩니다
+(`portfolio/vercel.json` 의 `buildCommand: node ../scripts/gen-config.mjs`).
+그래서 배포할 때 대시보드에서 손댈 것은 **Root Directory + 환경변수 2개**뿐입니다.
 
-   | 항목 | 값 | 설명 |
-   |------|-----|------|
-   | **Root Directory** | `portfolio` | ⚠️ **꼭 지정하세요.** 저장소 루트가 아니라 `portfolio` 폴더를 사이트 루트로 씁니다. |
-   | Framework Preset | `Other` | 자동으로 잡힙니다. 정적 사이트라 그대로 두면 됩니다. |
-   | Build Command | (비움) | 빌드 없음 |
-   | Output Directory | (비움) | `portfolio` 폴더를 그대로 서빙 |
+1. **[vercel.com](https://vercel.com) 로그인** (GitHub 계정).
+2. **Add New… → Project** → **`22thleee/claude-workspace`** 를 **Import**.
+3. **Root Directory** 를 `portfolio` 로 지정. ⚠️ 이걸 안 하면 404 가 뜹니다.
+   (Framework Preset·Build Command·Output Directory 는 건드리지 않아도 됩니다 —
+   `vercel.json` 이 처리합니다.)
+4. **Environment Variables** 에 아래 2개 추가 (Production·Preview·Development 전부 체크):
 
-5. **Deploy** 클릭 → 30초쯤 뒤 `https://프로젝트이름.vercel.app` 주소가 나옵니다.
+   | Name | Value |
+   |------|-------|
+   | `SUPABASE_URL` | `https://<프로젝트>.supabase.co` |
+   | `SUPABASE_ANON_KEY` | `eyJ...` (anon / public 키) |
 
-이후 `main` 브랜치에 푸시할 때마다 자동으로 다시 배포됩니다.
+5. **Deploy**. → `https://프로젝트이름.vercel.app`
+
+이후 `main` 에 푸시할 때마다 자동 재배포되고, 매 빌드에서 `config.js` 가 새로 생성됩니다.
+환경변수를 바꿨을 땐 Vercel 에서 **Redeploy** 를 한 번 눌러야 반영됩니다.
+
+> 환경변수를 깜빡해도 배포는 성공합니다 (방명록만 "설정 필요" 상태로 표시).
+> Supabase 테이블(`messages.sql`)은 미리 실행돼 있어야 합니다.
 
 ---
 
@@ -100,7 +100,8 @@ python -m http.server 8000           # 또는  npx serve -l 8000
 - [ ] 탭에 녹색 방패 아이콘이 보이는지 (favicon)
 - [ ] 우측 상단 **Theme** 버튼으로 라이트/다크 전환되는지
 - [ ] 카톡·링크드인에 주소를 붙여 미리보기 제목/설명이 뜨는지 (OG 태그)
-- [ ] 맨 아래 **방명록**에서 글이 작성되고 목록에 뜨는지 (배포본에 `config.js` 반영 필요 — 위 "배포 시" 참고)
+- [ ] 맨 아래 **방명록**에서 글이 작성되고 목록에 뜨는지
+      (안 되면 → Vercel 환경변수 2개 확인 후 Redeploy / Supabase `messages` 테이블 존재 확인)
 
 ## ✏️ 내용 교체 (배포와 별개, 중요)
 

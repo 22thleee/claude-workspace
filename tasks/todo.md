@@ -1,19 +1,25 @@
 # TODO
 
-## 포트폴리오 방명록(Supabase) 기능 추가  ⏳ 코드 완료 / 왕복 테스트 대기 (2026-09-03)
+## 포트폴리오 방명록(Supabase) 기능 추가  ✅ 완료 (2026-09-03)
 
 - [x] 1. `portfolio/supabase/messages.sql` — messages 테이블 + RLS
 - [x] 2. `.env.local`(repo 루트) — SUPABASE_URL / SUPABASE_ANON_KEY (git 제외)
 - [x] 3. `portfolio/config.example.js` + 생성되는 `config.js`
-- [x] 4. `scripts/gen-config.mjs` — .env.local → config.js
+- [x] 4. `scripts/gen-config.mjs` — .env.local(또는 환경변수) → config.js
 - [x] 5. `.gitignore` 에 `portfolio/config.js` 추가
 - [x] 6. `portfolio/index.html` — 방명록 섹션(폼+목록) + nav 링크 + 스타일 + fetch 스크립트
-- [x] 7. `portfolio/README.md` 방명록 세팅/로컬 테스트 안내
-- [x] 8. 로컬 검증(Chrome): 렌더·설정로드·REST 도달·검증 OK / 커밋·푸시
-- [ ] 9. **사용자**: Supabase SQL Editor 에서 `portfolio/supabase/messages.sql` 실행
-- [ ] 10. 테이블 생성 후 글 작성 왕복 테스트 (Claude 가 로컬에서 확인)
+- [x] 7. `portfolio/README.md` 방명록 세팅/로컬 테스트/배포 안내
+- [x] 8. 로컬 검증(Chrome): 렌더·설정로드·REST·검증 OK
+- [x] 9. 사용자가 `messages.sql` 실행 → 글 작성 왕복 테스트 통과 (DB 저장·삭제차단 확인)
+- [x] 10. 배포 설정: `vercel.json` buildCommand + gen-config 의 Vercel 모드 + README
 
-### 로컬 테스트 방법
+### 배포 시 사용자가 할 일 (Vercel 대시보드)
+1. Root Directory = `portfolio`
+2. Environment Variables: `SUPABASE_URL`, `SUPABASE_ANON_KEY` (anon 키) 등록
+3. Deploy (이후 매 빌드에서 config.js 자동 생성)
+※ Supabase `messages` 테이블은 이미 생성됨. DB 의 테스트 행 `id:1` 은 Table Editor 에서 삭제.
+
+### 로컬 개발 서버
 ```
 node scripts/gen-config.mjs
 cd portfolio && python -m http.server 8000

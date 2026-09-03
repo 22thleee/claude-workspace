@@ -118,3 +118,21 @@
   사용자가 `portfolio/supabase/messages.sql` 을 Supabase SQL Editor 에서 실행해야 함
   (anon 키로는 DDL 불가). 실행 후 왕복 테스트 예정.
   커밋/푸시 완료. `.env.local`·`config.js` 는 커밋 안 됨(스테이징 검사로 확인).
+
+### 방명록 — 로컬 왕복 테스트 + Vercel 배포 설정
+- **무엇을(테스트):** 사용자가 `messages.sql` 실행 완료. 개발 서버(127.0.0.1:8000) 띄우고
+  Chrome 으로 글 작성 → "남겼습니다" + 목록 즉시 표시 확인. REST 직접 조회로 DB 에 `id:1`
+  행 저장 확인(UTC 저장→KST 표시). anon DELETE 는 `42501 permission denied`(정책대로 차단).
+- **무엇을(배포 설정):**
+  - `portfolio/vercel.json` 에 `"buildCommand": "node ../scripts/gen-config.mjs"`,
+    `"outputDirectory": "."` 추가 → 배포 때마다 Vercel 환경변수로 `config.js` 자동 생성.
+  - `scripts/gen-config.mjs` — 환경변수 없을 때: 로컬은 exit 1(기존), Vercel(`process.env.VERCEL`)
+    은 경고만 하고 빈 config.js 로 exit 0 (배포 실패 방지, 방명록만 비활성).
+  - `.env.example` 에 `SUPABASE_URL` / `SUPABASE_ANON_KEY` 항목 추가(견본).
+  - `portfolio/README.md` 배포 절차 갱신 — 대시보드에서 Root Directory + 환경변수 2개만.
+- **왜:** 사용자 요청 — 방명록 동작 확인 + 배포 설정 완료. 키는 git 에 안 올리는 방식 유지.
+- **결과:** 확인됨. gen-config 3가지 경로(로컬 .env.local / Vercel+env / Vercel-env없음) 테스트 통과.
+  vercel.json JSON 유효, 개발 서버 정상. git status 에 config.js·.env.local 없음.
+  커밋/푸시 완료. **사용자 배포 시 할 일:** Vercel 프로젝트에 SUPABASE_URL·SUPABASE_ANON_KEY
+  환경변수 등록 + Root Directory=portfolio. (테이블은 이미 생성됨)
+  **남은 것:** DB `id:1` 테스트 행 — 사용자가 Supabase Table Editor 에서 삭제.
