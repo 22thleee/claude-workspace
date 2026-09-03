@@ -1,5 +1,22 @@
 # TODO
 
+## 포트폴리오 Vercel 배포 세팅  ✅ 완료 (2026-09-03)
+
+- [x] 1. `portfolio/index.html` 백업 → `index.html.bak`
+- [x] 2. `index.html` 보강 — `<!DOCTYPE html>` + `<html lang="ko">` / `<head>`(charset·viewport·
+       description·Open Graph·favicon) / `<body>` 래퍼 추가. 본문·디자인은 그대로.
+- [x] 3. `portfolio/favicon.svg` 생성 (안전녹색 방패+체크)
+- [x] 4. `portfolio/vercel.json` (cleanUrls + 보안 헤더) · `portfolio/robots.txt` 생성
+- [x] 5. `portfolio/README.md` 생성 — Vercel 웹 배포 단계별 안내 (핵심: Root Directory = `portfolio`)
+- [x] 6. `.gitignore` 에 `.vercel/` 추가
+- [x] 7. 커밋 + `git push origin main`
+- [x] 8. `tasks/progress.md` 기록
+
+### 결과
+- 정적 사이트라 빌드 없음. 사용자가 Vercel 에서 저장소 Import → Root Directory `portfolio` 지정 → Deploy.
+- 배포 자체는 사용자가 직접 진행.
+- 남은 일(코드 아님): index.html 안의 연락처·성과지표·경력 3건이 아직 예시값 → 실제 정보로 교체 필요.
+
 ## 포트폴리오 기본 배경을 다크모드로  ✅ 완료 (2026-09-02)
 
 - [x] 1. 새 브랜치 `portfolio-dark-mode` 생성 + 체크아웃

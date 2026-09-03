@@ -29,6 +29,9 @@ desktop.ini
 # ── 자동 생성 결과물 ────────────────────────────────
 weather.txt
 
+# ── Vercel (배포 CLI 로컬 연결 정보) ───────────────
+.vercel/
+
 # ── 개인/업무 자료 (git 추적 제외, 로컬에는 유지) ──
 docs/resume.pdf
 docs/sales.csv

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="이태훈 포트폴리오">
+  <rect width="64" height="64" rx="12" fill="#10140f"/>
+  <path d="M32 8 54 16 V32 C54 44 44 52 32 56 20 52 10 44 10 32 V16 Z" fill="none" stroke="#46c47c" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M22 32 29 39 43 24" fill="none" stroke="#63d494" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

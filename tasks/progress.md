@@ -63,3 +63,24 @@
 - **왜:** 사용자 요청 — 포트폴리오 기본 배경을 어둡게.
 - **결과:** 사용자가 브라우저로 확인 후 승인. `main` 에 `--no-ff` 머지(e3899ab) 후
   GitHub 푸시 완료(db40111..e3899ab). 로컬 브랜치는 남겨둠.
+
+---
+
+## 2026-09-03
+
+### 포트폴리오 Vercel 배포 세팅
+- **무엇을:** `portfolio/index.html` 을 배포 가능한 온전한 HTML 문서로 보강.
+  수정 전 `index.html.bak` 백업. 앞부분에 `<!DOCTYPE html>` + `<html lang="ko">` /
+  `<head>`(charset, viewport, description, author, color-scheme, favicon 링크,
+  Open Graph 4종, twitter:card) / `<body>` 래퍼만 추가 — 기존 `<style>`·본문·`<script>` 는
+  한 글자도 안 건드림. 새 파일 4개: `favicon.svg`(안전녹색 방패+체크),
+  `vercel.json`(cleanUrls + X-Content-Type-Options·X-Frame-Options·Referrer-Policy·
+  Permissions-Policy 헤더), `robots.txt`(전체 허용), `README.md`(Vercel 웹 배포
+  단계별 안내 — 핵심은 Import 시 Root Directory 를 `portfolio` 로 지정). `.gitignore` 에 `.vercel/` 추가.
+- **왜:** 사용자 요청. 포트폴리오를 Vercel 로 배포 가능한 상태로 세팅 (배포 실행은 사용자가 직접).
+- **결과:** 확인됨 — HTML 태그 균형(html/head/body/style/script/header/main/footer 각 1:1),
+  `vercel.json` JSON 파싱 OK, `favicon.svg` XML 파싱 OK. 정적 사이트라 빌드 과정 없음.
+  커밋 후 `git push origin main` 완료. 배포는 vercel.com 에서 저장소 Import →
+  Root Directory `portfolio` → Deploy (README 에 절차 명시).
+- **남은 일(코드 아님):** `index.html` 의 연락처(example.com 이메일, 010-0000-0000),
+  성과 지표 4개, 경력 3건이 아직 예시값. 실제 정보로 교체 필요 — README 에도 체크리스트로 적어둠.
