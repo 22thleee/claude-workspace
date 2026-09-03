@@ -1,5 +1,25 @@
 # TODO
 
+## 포트폴리오 방명록(Supabase) 기능 추가  ⏳ 코드 완료 / 왕복 테스트 대기 (2026-09-03)
+
+- [x] 1. `portfolio/supabase/messages.sql` — messages 테이블 + RLS
+- [x] 2. `.env.local`(repo 루트) — SUPABASE_URL / SUPABASE_ANON_KEY (git 제외)
+- [x] 3. `portfolio/config.example.js` + 생성되는 `config.js`
+- [x] 4. `scripts/gen-config.mjs` — .env.local → config.js
+- [x] 5. `.gitignore` 에 `portfolio/config.js` 추가
+- [x] 6. `portfolio/index.html` — 방명록 섹션(폼+목록) + nav 링크 + 스타일 + fetch 스크립트
+- [x] 7. `portfolio/README.md` 방명록 세팅/로컬 테스트 안내
+- [x] 8. 로컬 검증(Chrome): 렌더·설정로드·REST 도달·검증 OK / 커밋·푸시
+- [ ] 9. **사용자**: Supabase SQL Editor 에서 `portfolio/supabase/messages.sql` 실행
+- [ ] 10. 테이블 생성 후 글 작성 왕복 테스트 (Claude 가 로컬에서 확인)
+
+### 로컬 테스트 방법
+```
+node scripts/gen-config.mjs
+cd portfolio && python -m http.server 8000
+# http://localhost:8000  (file:// 직접 열기는 fetch 막혀서 안 됨)
+```
+
 ## 포트폴리오 Vercel 배포 세팅  ✅ 완료 (2026-09-03)
 
 - [x] 1. `portfolio/index.html` 백업 → `index.html.bak`

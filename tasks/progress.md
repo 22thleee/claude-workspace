@@ -93,3 +93,28 @@
 - **결과:** 확인됨 — 로컬 http 서버(127.0.0.1:8765)로 띄워 Chrome 스크린샷으로 검증.
   다크 테마에서 딥 퍼플 배경 + 녹색 액센트 정상 렌더, 태그/구분선/본문 대비 양호.
   커밋 f5e018c → `git push origin main` (1bceaed..f5e018c).
+
+### 포트폴리오 방명록(Supabase) 기능 추가
+- **무엇을:** 정적 사이트에 Supabase `messages` 테이블 기반 방명록 추가.
+  - `portfolio/supabase/messages.sql` — 테이블(id, name, content, created_at) + RLS
+    (SELECT/INSERT 누구나, UPDATE/DELETE 정책 없음, 컬럼 권한으로 name·content 만 insert).
+  - `.env.local`(repo 루트, git 제외) — `SUPABASE_URL`, `SUPABASE_ANON_KEY`.
+  - `scripts/gen-config.mjs` — `.env.local`(또는 process.env) → `portfolio/config.js` 생성.
+    스크립트 위치 기준 경로라 실행 위치 무관.
+  - `portfolio/config.example.js`(git 포함) / `portfolio/config.js`(git 제외).
+  - `.gitignore` 에 `portfolio/config.js` 추가 (`.env.local` 은 기존 `.env.*` 로 이미 제외).
+  - `portfolio/index.html` — 연락처 다음에 `<section id="guestbook">`(폼 + 목록), 헤더에
+    `<script src="config.js">`, nav 에 "방명록" 링크, `<style>` 에 `.gb-*` 규칙,
+    맨 아래에 방명록 스크립트. Supabase REST 를 라이브러리 없이 `fetch` 로 호출
+    (GET select order=created_at.desc limit 100 / POST Prefer:return=representation).
+    사용자 입력은 `textContent` 로만 렌더 → XSS 방지. 설정 없음/테이블 없음/네트워크
+    오류 각각 안내 문구.
+  - `portfolio/README.md` — 방명록 세팅 + 로컬 테스트 순서, 배포 시 config.js 넣는 2가지 방법.
+- **왜:** 사용자 요청 — 포트폴리오에 방명록(폼+리스트), 환경변수는 .env.local, 로컬 테스트 준비.
+- **결과:** 부분 확인됨. 로컬(127.0.0.1:8766) + Chrome 으로 검증:
+  방명록 섹션 렌더 OK, nav "방명록" 링크 OK, config.js 로드 OK, Supabase REST 호출 도달 OK
+  (CORS/인증 통과), 빈 폼 클라이언트 검증 OK, 라이트/다크(퍼플) 양쪽 스타일 OK,
+  콘솔에 문법오류 없음. **테이블 미생성 상태라 글 작성 왕복은 미검증** —
+  사용자가 `portfolio/supabase/messages.sql` 을 Supabase SQL Editor 에서 실행해야 함
+  (anon 키로는 DDL 불가). 실행 후 왕복 테스트 예정.
+  커밋/푸시 완료. `.env.local`·`config.js` 는 커밋 안 됨(스테이징 검사로 확인).

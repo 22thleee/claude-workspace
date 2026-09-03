@@ -4,12 +4,73 @@
 
 ```
 portfolio/
-├── index.html     페이지 본문 (디자인·내용 전부 이 파일 안에)
-├── favicon.svg    브라우저 탭 아이콘
-├── robots.txt     검색엔진 수집 허용
-├── vercel.json    Vercel 설정 (클린 URL + 기본 보안 헤더)
-└── index.html.bak 수정 전 백업 (git 에 안 올라감)
+├── index.html         페이지 본문 (디자인·내용·방명록 스크립트 전부 이 파일 안에)
+├── favicon.svg        브라우저 탭 아이콘
+├── robots.txt         검색엔진 수집 허용
+├── vercel.json        Vercel 설정 (클린 URL + 기본 보안 헤더)
+├── config.example.js  방명록 설정 템플릿 (git 포함)
+├── config.js          방명록 실제 설정 — 자동 생성, git 제외
+├── supabase/
+│   └── messages.sql   방명록 테이블 + RLS (Supabase SQL Editor 에서 실행)
+└── index.html.bak     수정 전 백업 (git 에 안 올라감)
 ```
+
+---
+
+## 📖 방명록 (Supabase) 세팅
+
+방명록은 Supabase(Postgres) 의 `messages` 테이블에 글을 저장합니다.
+빌드 과정이 없는 정적 사이트라, 연결 정보는 아래 흐름으로 주입합니다.
+
+```
+.env.local  (repo 루트, git 제외)  ── node scripts/gen-config.mjs ──▶  portfolio/config.js  (git 제외)
+                                                                        └─ index.html 이 <script src="config.js"> 로 읽음
+```
+
+### 1. Supabase 에 테이블 만들기 (최초 1회)
+
+`portfolio/supabase/messages.sql` 내용을 복사 → Supabase 대시보드 **SQL Editor** 에 붙여넣고 **Run**.
+`messages(id, name, content, created_at)` 테이블과 RLS 정책(누구나 읽기/쓰기)이 생성됩니다.
+
+### 2. 연결 정보 넣기
+
+repo 루트 `.env.local` 에 값이 들어 있어야 합니다 (`.env.example` 형식 참고):
+
+```
+SUPABASE_URL=https://<프로젝트>.supabase.co
+SUPABASE_ANON_KEY=eyJ...
+```
+
+> `anon key` 는 브라우저에 노출되는 **공개 키**입니다. 데이터 보호는 RLS 가 합니다.
+> **service_role 키·DB 비밀번호는 절대 여기 넣지 마세요.**
+
+### 3. config.js 생성
+
+```bash
+node scripts/gen-config.mjs
+```
+
+`.env.local` 을 고칠 때마다 이 명령을 다시 실행하세요.
+
+### 4. 로컬에서 테스트
+
+```bash
+node scripts/gen-config.mjs          # config.js 생성/갱신
+cd portfolio
+python -m http.server 8000           # 또는  npx serve -l 8000
+```
+
+브라우저에서 `http://localhost:8000` → 맨 아래 **방명록** 섹션에서 글 작성 → 목록에 바로 표시되면 정상.
+(`file://` 로 직접 열면 `fetch` 가 막혀서 안 됩니다. 반드시 로컬 서버로 여세요.)
+
+### 배포(Vercel) 시 config.js 넣는 법
+
+`config.js` 는 git 에 안 올라가므로 배포본에는 없습니다. 둘 중 하나:
+
+- **간단:** `config.js` 를 커밋한다. (anon key 는 공개 키라 저장소가 private 이면 부담 없음)
+- **깔끔:** Vercel 프로젝트 **Settings → Environment Variables** 에 `SUPABASE_URL`,
+  `SUPABASE_ANON_KEY` 등록 → **Build Command** 를 `node ../scripts/gen-config.mjs` 로 설정
+  (Root Directory 가 `portfolio` 이므로 스크립트 경로 앞에 `../`).
 
 ---
 
@@ -39,6 +100,7 @@ portfolio/
 - [ ] 탭에 녹색 방패 아이콘이 보이는지 (favicon)
 - [ ] 우측 상단 **Theme** 버튼으로 라이트/다크 전환되는지
 - [ ] 카톡·링크드인에 주소를 붙여 미리보기 제목/설명이 뜨는지 (OG 태그)
+- [ ] 맨 아래 **방명록**에서 글이 작성되고 목록에 뜨는지 (배포본에 `config.js` 반영 필요 — 위 "배포 시" 참고)
 
 ## ✏️ 내용 교체 (배포와 별개, 중요)
 

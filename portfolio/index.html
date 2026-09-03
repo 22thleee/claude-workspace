@@ -16,6 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Libre+Franklin:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<script src="config.js"></script>
 
 <style>
   :root {
@@ -395,6 +396,103 @@
     outline-offset: 3px;
     border-radius: 2px;
   }
+
+  /* ---- guestbook -------------------------------------- */
+  .gb-form {
+    display: grid;
+    gap: 0.9rem;
+    max-width: 40rem;
+    margin-bottom: 3rem;
+  }
+  .gb-field { display: grid; gap: 0.4rem; }
+  .gb-field label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .gb-form input,
+  .gb-form textarea {
+    width: 100%;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 0.6rem 0.7rem;
+  }
+  .gb-form textarea { min-height: 6rem; line-height: 1.55; resize: vertical; }
+  .gb-form input:focus-visible,
+  .gb-form textarea:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+    border-color: var(--accent);
+  }
+  .gb-actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .gb-submit {
+    appearance: none;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ground);
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 3px;
+    padding: 0.55rem 1.1rem;
+    cursor: pointer;
+  }
+  .gb-submit:hover { background: var(--accent-2); border-color: var(--accent-2); }
+  .gb-submit[disabled] { opacity: 0.5; cursor: default; }
+  .gb-status {
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    min-height: 1.2em;
+  }
+  .gb-status[data-kind="error"] { color: #e0736b; }
+  .gb-status[data-kind="ok"]    { color: var(--accent); }
+
+  .gb-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-width: 44rem;
+  }
+  .gb-item {
+    border-top: 1px solid var(--line);
+    padding-top: 1.25rem;
+  }
+  .gb-item-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin-bottom: 0.4rem;
+  }
+  .gb-name {
+    font-family: var(--font-kr);
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--ink);
+  }
+  .gb-time {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ink-faint);
+  }
+  .gb-content {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .gb-empty { color: var(--ink-faint); font-size: 0.9rem; }
 </style>
 </head>
 
@@ -406,6 +504,7 @@
       <a href="#profile">소개</a>
       <a href="#work">경력</a>
       <a href="#contact">연락처</a>
+      <a href="#guestbook">방명록</a>
       <button type="button" class="theme-btn" id="themeBtn" aria-label="색상 테마 전환">Theme</button>
     </nav>
   </div>
@@ -562,6 +661,28 @@
       <p class="note">※ 연락처와 경력 3건은 실제 정보가 아닌 <strong>예시</strong>입니다. 이름·직업만 &lsquo;이태훈 / 안전관리자&rsquo;로 반영했고, 나머지는 실제 이력으로 교체해 주세요.</p>
     </div>
   </section>
+
+  <section id="guestbook">
+    <div class="wrap">
+      <p class="eyebrow">Guestbook</p>
+      <h2>방명록</h2>
+      <form class="gb-form" id="gbForm" autocomplete="off" novalidate>
+        <div class="gb-field">
+          <label for="gbName">이름</label>
+          <input type="text" id="gbName" name="name" maxlength="40" required>
+        </div>
+        <div class="gb-field">
+          <label for="gbContent">메시지</label>
+          <textarea id="gbContent" name="content" maxlength="1000" required></textarea>
+        </div>
+        <div class="gb-actions">
+          <button type="submit" class="gb-submit" id="gbSubmit">남기기</button>
+          <span class="gb-status" id="gbStatus" role="status" aria-live="polite"></span>
+        </div>
+      </form>
+      <ul class="gb-list" id="gbList"></ul>
+    </div>
+  </section>
 </main>
 
 <footer>
@@ -590,6 +711,144 @@
       root.setAttribute('data-theme', next);
       try { localStorage.setItem('theme', next); } catch (e) {}
     });
+  })();
+</script>
+
+<script>
+  /* ---- guestbook: Supabase REST (라이브러리 없이 fetch) ---- */
+  (function () {
+    var cfg  = window.PORTFOLIO_CONFIG || {};
+    var BASE = (cfg.SUPABASE_URL || '').replace(/\/+$/, '');
+    var KEY  = cfg.SUPABASE_ANON_KEY || '';
+    var REST = BASE + '/rest/v1/messages';
+
+    var form     = document.getElementById('gbForm');
+    var nameEl   = document.getElementById('gbName');
+    var contentEl= document.getElementById('gbContent');
+    var submitEl = document.getElementById('gbSubmit');
+    var statusEl = document.getElementById('gbStatus');
+    var listEl   = document.getElementById('gbList');
+    if (!form) return;
+
+    function setStatus(msg, kind) {
+      statusEl.textContent = msg || '';
+      if (kind) statusEl.setAttribute('data-kind', kind);
+      else statusEl.removeAttribute('data-kind');
+    }
+
+    function headers(extra) {
+      var h = { apikey: KEY, Authorization: 'Bearer ' + KEY };
+      if (extra) for (var k in extra) h[k] = extra[k];
+      return h;
+    }
+
+    function fmtTime(iso) {
+      var d = new Date(iso);
+      if (isNaN(d.getTime())) return '';
+      var p = function (n) { return (n < 10 ? '0' : '') + n; };
+      return d.getFullYear() + '.' + p(d.getMonth() + 1) + '.' + p(d.getDate()) +
+             ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
+    }
+
+    function renderEmpty(text) {
+      listEl.textContent = '';
+      var li = document.createElement('li');
+      li.className = 'gb-empty';
+      li.textContent = text;
+      listEl.appendChild(li);
+    }
+
+    function render(rows) {
+      if (!rows || !rows.length) {
+        renderEmpty('아직 방명록이 없습니다. 첫 메시지를 남겨보세요.');
+        return;
+      }
+      listEl.textContent = '';
+      rows.forEach(function (row) {
+        var li = document.createElement('li');
+        li.className = 'gb-item';
+
+        var head = document.createElement('div');
+        head.className = 'gb-item-head';
+        var nm = document.createElement('span');
+        nm.className = 'gb-name';
+        nm.textContent = row.name;              // textContent → XSS 방지
+        var tm = document.createElement('span');
+        tm.className = 'gb-time';
+        tm.textContent = fmtTime(row.created_at);
+        head.appendChild(nm);
+        head.appendChild(tm);
+
+        var body = document.createElement('p');
+        body.className = 'gb-content';
+        body.textContent = row.content;         // textContent → XSS 방지
+
+        li.appendChild(head);
+        li.appendChild(body);
+        listEl.appendChild(li);
+      });
+    }
+
+    function loadMessages() {
+      var url = REST + '?select=id,name,content,created_at&order=created_at.desc&limit=100';
+      return fetch(url, { headers: headers() })
+        .then(function (res) {
+          if (!res.ok) return res.json().then(function (e) { throw e; });
+          return res.json();
+        })
+        .then(render)
+        .catch(function (err) {
+          console.error('[guestbook] load failed', err);
+          renderEmpty(
+            err && err.code === 'PGRST205'
+              ? 'messages 테이블이 아직 없습니다 — portfolio/supabase/messages.sql 을 실행하세요.'
+              : '방명록을 불러오지 못했습니다.'
+          );
+        });
+    }
+
+    if (!BASE || !KEY) {
+      setStatus('방명록 설정이 필요합니다 — node scripts/gen-config.mjs 로 portfolio/config.js 를 만드세요.', 'error');
+      submitEl.disabled = true;
+      renderEmpty('설정 대기 중.');
+      return;
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var name = nameEl.value.trim();
+      var content = contentEl.value.trim();
+      if (!name || !content) {
+        setStatus('이름과 메시지를 모두 입력해 주세요.', 'error');
+        return;
+      }
+      submitEl.disabled = true;
+      setStatus('남기는 중…');
+      fetch(REST, {
+        method: 'POST',
+        headers: headers({
+          'Content-Type': 'application/json',
+          Prefer: 'return=representation'
+        }),
+        body: JSON.stringify({ name: name, content: content })
+      })
+        .then(function (res) {
+          if (!res.ok) return res.json().then(function (e) { throw e; });
+          return res.json();
+        })
+        .then(function () {
+          contentEl.value = '';
+          setStatus('남겼습니다. 고맙습니다!', 'ok');
+          return loadMessages();
+        })
+        .catch(function (err) {
+          console.error('[guestbook] submit failed', err);
+          setStatus((err && (err.message || err.hint)) || '저장에 실패했습니다.', 'error');
+        })
+        .then(function () { submitEl.disabled = false; });
+    });
+
+    loadMessages();
   })();
 </script>
 </body>
