@@ -14,10 +14,12 @@
 - [x] 10. 배포 설정: `vercel.json` buildCommand + gen-config 의 Vercel 모드 + README
 
 ### 배포 시 사용자가 할 일 (Vercel 대시보드)
-1. Root Directory = `portfolio`
-2. Environment Variables: `SUPABASE_URL`, `SUPABASE_ANON_KEY` (anon 키) 등록
-3. Deploy (이후 매 빌드에서 config.js 자동 생성)
-※ Supabase `messages` 테이블은 이미 생성됨. DB 의 테스트 행 `id:1` 은 Table Editor 에서 삭제.
+1. Root Directory = `portfolio`  ← 이거 하나만
+2. Build Command / Output Directory 는 비워둠 (건드리면 404)
+3. Deploy
+※ config.js 는 커밋돼 있어 환경변수 불필요. Supabase `messages` 테이블은 이미 생성됨.
+   DB 의 테스트 행 `id:1` 은 Table Editor 에서 삭제.
+※ (2026-09-03) buildCommand 방식은 scripts/ 가 Root Dir 밖이라 404 → 폐기, config.js 커밋으로 전환.
 
 ### 로컬 개발 서버
 ```

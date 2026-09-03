@@ -2,7 +2,6 @@
 .env
 .env.*
 !.env.example
-portfolio/config.js
 *.key
 *.pem
 id_rsa

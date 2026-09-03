@@ -136,3 +136,17 @@
   커밋/푸시 완료. **사용자 배포 시 할 일:** Vercel 프로젝트에 SUPABASE_URL·SUPABASE_ANON_KEY
   환경변수 등록 + Root Directory=portfolio. (테이블은 이미 생성됨)
   **남은 것:** DB `id:1` 테스트 행 — 사용자가 Supabase Table Editor 에서 삭제.
+
+### 방명록 배포 — 404 재발 → vercel.json 되돌리고 config.js 커밋
+- **무엇을:** 직전 커밋(924fe2e)의 `vercel.json` `buildCommand: node ../scripts/gen-config.mjs`
+  + `outputDirectory: "."` 때문에 Vercel 배포가 404. 원인: `scripts/` 가 Root Directory
+  (`portfolio`) 밖이라 빌드에 포함 안 됨 → 빌드 실패 → 빈 배포.
+  → `vercel.json` 을 순수 정적(빌드 명령 없음)으로 되돌림(1e14d90).
+  → 사용자 선택으로 `portfolio/config.js` 를 **커밋**하기로 결정.
+     `.gitignore` 에서 `portfolio/config.js` 제거, `gen-config.mjs` 의 Vercel 분기 삭제
+     (배너 문구도 "재생성 후 커밋" 으로), `.env.example`·`README.md` 를 커밋 방식으로 갱신.
+- **왜:** 404 를 두 번 겪어 확실한 방법 필요. anon key 는 공개 키(RLS 로 보호) + private 레포라
+  커밋해도 실질 위험 낮음. `.env.local`(원본)은 계속 git 제외, 생성물 config.js 만 커밋.
+- **결과:** 확인됨 — `vercel.json`/`config.js` 유효, 개발 서버 정상, `.env.local` 미스테이징.
+  커밋/푸시. **사용자 배포:** Vercel 에서 Root Directory=`portfolio` 만 지정하고 Deploy
+  (Build/Output 은 비워둠). 이제 환경변수 설정 불필요.

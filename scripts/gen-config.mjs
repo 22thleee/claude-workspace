@@ -44,23 +44,18 @@ const fromFile = existsSync(envPath)
 const url = fromFile.SUPABASE_URL || process.env.SUPABASE_URL || "";
 const anonKey = fromFile.SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || "";
 
-const onVercel = !!process.env.VERCEL;
-
 if (!url || !anonKey) {
-  const msg =
+  console.error(
     "[gen-config] SUPABASE_URL / SUPABASE_ANON_KEY 를 찾지 못했습니다.\n" +
-    "  - 로컬: repo 루트에 .env.local 을 만드세요 (.env.example 참고)\n" +
-    "  - Vercel: 프로젝트 Settings > Environment Variables 에 두 값을 등록하세요.";
-  if (onVercel) {
-    // 배포는 계속 진행 — 방명록만 비활성(페이지에 "설정 필요" 안내가 뜸)
-    console.warn(msg + "\n  → 빈 config.js 로 계속합니다 (방명록 비활성).");
-  } else {
-    console.error(msg);
-    process.exit(1);
-  }
+      "  - repo 루트에 .env.local 을 만들었는지 확인하세요 (.env.example 참고)\n" +
+      "  - 또는 환경변수로 전달하세요."
+  );
+  process.exit(1);
 }
 
-const banner = "// 자동 생성 파일 — 직접 수정하지 마세요. `node scripts/gen-config.mjs` 로 재생성됩니다.";
+const banner =
+  "// 자동 생성 파일 — 직접 고치지 마세요.\n" +
+  "// .env.local 을 수정한 뒤 `node scripts/gen-config.mjs` 로 재생성하고 커밋하세요.";
 const body = `${banner}\nwindow.PORTFOLIO_CONFIG = {\n  SUPABASE_URL: ${JSON.stringify(url)},\n  SUPABASE_ANON_KEY: ${JSON.stringify(anonKey)},\n};\n`;
 
 writeFileSync(outPath, body, "utf8");
